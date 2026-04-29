@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Approximation & Rounding | Vibrant Math Lesson + 200 Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f5fe 0%, #e4edf8 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, sans-serif;
+            padding: 1.8rem;
+            color: #0a2f3f;
+            animation: fadeInBody 0.8s ease-out;
+        }
+
+        @keyframes fadeInBody {
+            from { opacity: 0; transform: translateY(15px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header with moving gradient */
+        .hero {
+            background: linear-gradient(125deg, #0b3b4f, #1f6e8c, #2c8eb0);
+            background-size: 200% 200%;
+            animation: gradientShift 7s ease infinite;
+            border-radius: 2rem;
+            padding: 2rem 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            transition: transform 0.2s;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero:hover {
+            transform: scale(1.01);
+            box-shadow: 0 30px 40px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .hero h1 span {
+            background: #ffcd6b;
+            color: #1b4e5e;
+            font-size: 1rem;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 48px;
+            font-weight: 600;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* ========= REDESIGNED NOTES SECTION - ATTRACTIVE CARDS ========= */
+        .notes-showcase {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .glow-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fffef7 100%);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255,215,150,0.5);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,220,150,0.15) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .glow-card:hover::before {
+            opacity: 1;
+        }
+
+        .glow-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 45px -12px rgba(0, 0, 0, 0.25), 0 0 0 2px #ffcd8a;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px dashed #ffcd8a;
+            padding-bottom: 0.7rem;
+        }
+
+        .card-header .icon {
+            font-size: 2rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f5e6e, #c25f1a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .bilingual-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .eng-text {
+            background: linear-gradient(95deg, #f1f9ff, #eef3fc);
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            border-left: 6px solid #ff914d;
+            font-size: 1.02rem;
+            line-height: 1.5;
+            font-weight: 500;
+            color: #1a4a5a;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .sw-text {
+            background: linear-gradient(95deg, #fff8ec, #fff3e2);
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            border-left: 6px solid #ffb347;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #3d5c6b;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .highlight-tag {
+            background: linear-gradient(115deg, #ffecd2, #ffe0bd);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            font-weight: 700;
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            color: #8b4c1a;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .ex-card {
+            background: white;
+            border-radius: 1.4rem;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(203, 224, 234, 0.8);
+        }
+
+        .ex-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 28px -12px rgba(0, 0, 0, 0.2);
+            border-color: #ffbc7a;
+        }
+
+        .ex-question {
+            background: linear-gradient(105deg, #f8f2e3, #fff3e2);
+            padding: 1rem 1.3rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2cfaa;
+            transition: background 0.2s;
+        }
+
+        .ex-question:hover {
+            background: linear-gradient(105deg, #ffe5c4, #ffefcf);
+        }
+
+        .ex-answer {
+            background: #fff8ed;
+            padding: 0.9rem 1.3rem;
+            display: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1b4e3f;
+            border-top: 1px dashed #ffcf8a;
+        }
+
+        .ex-answer.show {
+            display: block;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(-8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Quiz Area with stylish gradient */
+        .quiz-area {
+            background: linear-gradient(125deg, #fff5e6, #fff2e0, #fff9ef);
+            background-size: 200% 200%;
+            animation: subtleBgMove 8s ease infinite;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,245,0.8);
+            transition: all 0.3s;
+        }
+
+        @keyframes subtleBgMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+
+        .score-panel {
+            background: linear-gradient(135deg, #1f5e6e, #134f5e);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            animation: floatBadge 3s infinite ease;
+        }
+
+        @keyframes floatBadge {
+            0% { transform: translateY(0px);}
+            50% { transform: translateY(-3px);}
+            100% { transform: translateY(0px);}
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            max-height: 550px;
+            overflow-y: auto;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .quiz-item {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1rem;
+            border: 1px solid #f0dbb6;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .quiz-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.15);
+            border-color: #ffbc7a;
+        }
+
+        .quiz-question {
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #1e4a5e;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 8px 0 6px;
+        }
+
+        .quiz-opt {
+            background: linear-gradient(115deg, #ecf3f8, #e4edf4);
+            padding: 4px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.15s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .quiz-opt:hover {
+            background: #ffd8b0;
+            transform: scale(1.02);
+        }
+
+        .quiz-opt.selected {
+            background: linear-gradient(95deg, #ff914d, #ffad60);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 3px 8px rgba(255, 100, 0, 0.3);
+        }
+
+        .quiz-feedback {
+            font-size: 0.7rem;
+            margin-top: 6px;
+            min-height: 28px;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            border: none;
+            background: linear-gradient(115deg, #ff914d, #ff6e3a);
+            padding: 0.8rem 2rem;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.25s;
+            box-shadow: 0 8px 16px -6px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 24px -8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(115deg, #ffa059, #ff8544);
+        }
+
+        .btn-reset {
+            background: linear-gradient(115deg, #5c7f8c, #3b6a7a);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #567c8a;
+            font-weight: 500;
+            animation: fadeInFooter 1s;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0f3b4a, #2c7a6e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border-left: 8px solid #ff9f4a;
+            padding-left: 1rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📐 APPROXIMATION & ROUNDING <span>Form One</span></h1>
+        <div class="badge">🔊 Click → answer + sound | Bofya → jibu + sauti</div>
+    </div>
+
+    <!-- REDESIGNED NOTES SECTION - ATTRACTIVE GLOW CARDS -->
+    <div class="notes-showcase">
+        <!-- Card 1: Meaning of Approximation -->
+        <div class="glow-card">
+            <div class="card-header">
+                <div class="icon">🧠✨</div>
+                <h3>Meaning of Approximation | Maana ya Ukadiriaji</h3>
+            </div>
+            <div class="bilingual-content">
+                <div class="eng-text">
+                    📌 <strong>Approximation</strong> is a process of finding a number that is closest to the exact value.<br>
+                    It involves expressing a number into a higher or lower value which is close to the exact value. Approximation can be termed as <strong>estimation</strong> and is represented by the symbol <strong style="background:#ffe0b5; padding:0 6px; border-radius:20px;">'≈'</strong> (approximately equal to).
+                </div>
+                <div class="sw-text">
+                    📌 <strong>Ukadiriaji</strong> ni mchakato wa kutafuta nambari iliyo karibu zaidi na thamani halisi.<br>
+                    Inahusisha kueleza nambari kuwa thamani ya juu au ya chini iliyo karibu na thamani halisi. Ukadiriaji unaweza kuitwa <strong>makadirio</strong> na unawakilishwa na alama <strong style="background:#ffe0b5; padding:0 6px; border-radius:20px;">'≈'</strong> (takriban sawa).
+                </div>
+                <div class="highlight-tag">⭐ "≈" means approximately equal to | inamaanisha takriban sawa na</div>
+            </div>
+        </div>
+
+        <!-- Card 2: Rounding off by Place Values -->
+        <div class="glow-card">
+            <div class="card-header">
+                <div class="icon">🔢🏠</div>
+                <h3>Rounding off by Place Values | Kuzungusha kwa Thamani ya Mahali</h3>
+            </div>
+            <div class="bilingual-content">
+                <div class="eng-text">
+                    🎯 Rounding to the nearest ten, hundred, thousand, etc.<br>
+                    <strong>Example:</strong> 473 rounded to nearest hundred → <strong>500</strong> (because 7 tens ≥ 50).<br>
+                    Rule: Look at the digit to the right. If it's 5 or more → round up. If less than 5 → round down.
+                </div>
+                <div class="sw-text">
+                    🎯 Kuzungusha kwa kumi, mia, elfu iliyo karibu zaidi.<br>
+                    <strong>Mfano:</strong> 473 kwa mia iliyo karibu → <strong>500</strong> (kwa sababu 7 makumi ≥ 50).<br>
+                    Kanuni: Angalia tarakimu ya kulia. Ikiwa ni 5 au zaidi → zungusha juu. Ikiwa chini ya 5 → zungusha chini.
+                </div>
+                <div class="highlight-tag">📐 Examples: 47→50 (nearest ten) | 132→100 (nearest hundred)</div>
+            </div>
+        </div>
+
+        <!-- Card 3: Rounding off by Decimal Places -->
+        <div class="glow-card">
+            <div class="card-header">
+                <div class="icon">🔢🧮</div>
+                <h3>Rounding by Decimal Places | Kuzungusha kwa Sehemu za Desimali</h3>
+            </div>
+            <div class="bilingual-content">
+                <div class="eng-text">
+                    🎯 Rounding to 1 decimal place, 2 decimal places, etc.<br>
+                    <strong>Example:</strong> 3.768 rounded to 2 decimal places → <strong>3.77</strong> (third digit is 8 ≥ 5, so round up).<br>
+                    Keep the required digits, look at the next digit.
+                </div>
+                <div class="sw-text">
+                    🎯 Kuzungusha hadi desimali moja, mbili, nk.<br>
+                    <strong>Mfano:</strong> 3.768 hadi desimali mbili → <strong>3.77</strong> (tarakimu ya tatu ni 8 ≥ 5, hivyo zungusha juu).<br>
+                    Weka tarakimu unazotaka, angalia ile inayofuata.
+                </div>
+                <div class="highlight-tag">🔍 7.2849 → 7.3 (1 d.p) | 12.345 → 12.35 (2 d.p)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 20 EXAMPLES: only answer reveal -->
+    <div class="glow-card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <div class="icon">🧪🔊</div>
+            <h3>20 Examples (Click any question → answer + sound) | Mifano 20 (Bofya → jibu + sauti)</h3>
+        </div>
+        <div class="examples-grid" id="examplesList20"></div>
+        <div style="font-size: 0.75rem; margin-top: 16px; text-align: center;">🔊 Each click reveals short answer & plays sound | Kila mbofyo una jibu fupi na sauti</div>
+    </div>
+
+    <!-- 200 QUIZ SECTION -->
+    <div class="quiz-area">
+        <div class="quiz-header">
+            <div class="section-title" style="border-left-color: #ff914d; margin-bottom: 0;">🎯 200 QUIZ · Jaribio la Maswali 200</div>
+            <div class="score-panel">⭐ SCORE: <span id="finalScore">0</span> / <span id="totalQ">200</span></div>
+        </div>
+        <div id="quizGridContainer" class="quiz-grid"></div>
+        <div class="action-buttons">
+            <button class="btn" id="submitQuizBtn">✅ Submit & Get Score | Wasilisha na upate alama</button>
+            <button class="btn btn-reset" id="resetQuizBtn">🔄 Reset All | Weka upya</button>
+        </div>
+        <div id="quizMessage" style="text-align: center; margin-top: 1rem; font-weight: 500;"></div>
+    </div>
+    <footer>🌟 Animated gradient notes • Every click has sound | Kila mbofyo una sauti 🌟</footer>
+</div>
+
+<script>
+    // ----------------------------- SOUND BEEP FUNCTION -----------------------------
+    function playBeep() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 980;
+            gain.gain.value = 0.12;
+            osc.type = "sine";
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+            osc.stop(audioCtx.currentTime + 0.25);
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        } catch(e) { console.log("audio autoplay blocked but fine"); }
+    }
+
+    // ---------- 20 SIMPLE EXAMPLES: only the answer (no extra explanation) ----------
+    const examplesData = [
+        { q: "Round 47 to nearest ten.", ans: "50" },
+        { q: "Round 132 to nearest hundred.", ans: "100" },
+        { q: "Round 3.746 to 2 decimal places.", ans: "3.75" },
+        { q: "Round 0.0834 to 2 decimal places.", ans: "0.08" },
+        { q: "Round 2500 to nearest thousand.", ans: "3000" },
+        { q: "Round 7.2849 to 1 decimal place.", ans: "7.3" },
+        { q: "Approximate 68.5 to nearest whole number.", ans: "69" },
+        { q: "Round 999 to nearest hundred.", ans: "1000" },
+        { q: "Round 0.0456 to 3 decimal places.", ans: "0.046" },
+        { q: "Round 4571 to nearest ten.", ans: "4570" },
+        { q: "Round 12.345 to 2 decimal places.", ans: "12.35" },
+        { q: "Round 5/9 (as decimal) to 3 decimal places.", ans: "0.556" },
+        { q: "Round 2.0499 to 1 decimal place.", ans: "2.0" },
+        { q: "Round 18429 to nearest thousand.", ans: "18000" },
+        { q: "Round 6.999 to 2 decimal places.", ans: "7.00" },
+        { q: "Round 0.000567 to 4 decimal places.", ans: "0.0006" },
+        { q: "Round 7.5 to nearest whole number.", ans: "8" },
+        { q: "Round 34567 to nearest hundred.", ans: "34600" },
+        { q: "Round 0.999 to 1 decimal place.", ans: "1.0" },
+        { q: "Round 14.2857 to 2 decimal places.", ans: "14.29" }
+    ];
+
+    function buildExamples() {
+        const container = document.getElementById("examplesList20");
+        container.innerHTML = "";
+        examplesData.forEach((ex, idx) => {
+            const card = document.createElement("div");
+            card.className = "ex-card";
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "ex-question";
+            questionDiv.innerHTML = `<span>📌 ${ex.q}</span> <span class="click-icon">🔊 click</span>`;
+            const answerDiv = document.createElement("div");
+            answerDiv.className = "ex-answer";
+            answerDiv.innerHTML = `<strong>✓ Answer | Jibu:</strong> ${ex.ans}`;
+            questionDiv.addEventListener("click", () => {
+                playBeep();
+                answerDiv.classList.toggle("show");
+            });
+            card.appendChild(questionDiv);
+            card.appendChild(answerDiv);
+            container.appendChild(card);
+        });
+    }
+
+    // ----------------------------- 200 QUIZ GENERATION -----------------------------
+    let quizQuestions = [];
+    let userSelections = [];
+
+    function generate200Questions() {
+        const questions = [];
+        for (let i = 1; i <= 200; i++) {
+            const category = i % 5;
+            let text = "";
+            let options = [];
+            let correctAnswer = "";
+            
+            if (category === 0) {
+                let num = Math.floor(Math.random() * 9000) + 100;
+                let unit = Math.floor(Math.random() * 3);
+                let place = unit === 0 ? "ten" : (unit === 1 ? "hundred" : "thousand");
+                let factor = unit === 0 ? 10 : (unit === 1 ? 100 : 1000);
+                let rounded = Math.round(num / factor) * factor;
+                text = `Round ${num} to nearest ${place}.`;
+                correctAnswer = rounded.toString();
+                let dummy1 = (rounded + factor).toString();
+                let dummy2 = (rounded - factor).toString();
+                if (parseInt(dummy2) < 0) dummy2 = (rounded + factor/2).toString();
+                options = [correctAnswer, dummy1, dummy2, (rounded + (factor/2)).toString()];
+            } 
+            else if (category === 1) {
+                let base = (Math.random() * 50).toFixed(5);
+                let dec = parseFloat(base);
+                let dp = [1,2,3][Math.floor(Math.random()*3)];
+                let mult = Math.pow(10, dp);
+                let roundedVal = Math.round(dec * mult) / mult;
+                text = `Round ${dec} to ${dp} decimal place(s).`;
+                correctAnswer = roundedVal.toFixed(dp);
+                let fakeA = (roundedVal + 0.1).toFixed(dp);
+                let fakeB = (roundedVal - 0.05).toFixed(dp);
+                let fakeC = (roundedVal + 0.01).toFixed(dp);
+                options = [correctAnswer, fakeA, fakeB, fakeC];
+            }
+            else if (category === 2) {
+                let val = (Math.random() * 100).toFixed(2);
+                let numVal = parseFloat(val);
+                let roundedWhole = Math.round(numVal);
+                text = `Approximate ${numVal} to the nearest whole number.`;
+                correctAnswer = roundedWhole.toString();
+                options = [correctAnswer, (roundedWhole+1).toString(), (roundedWhole-1).toString(), (roundedWhole+2).toString()];
+                if (parseInt(options[2]) < 0) options[2] = (roundedWhole+1).toString();
+            }
+            else if (category === 3) {
+                let big = Math.floor(Math.random() * 80000) + 2000;
+                let target = ["thousand", "hundred"][Math.floor(Math.random()*2)];
+                let factor = target === "thousand" ? 1000 : 100;
+                let roundedBig = Math.round(big / factor) * factor;
+                text = `Round ${big} to nearest ${target}.`;
+                correctAnswer = roundedBig.toString();
+                options = [correctAnswer, (roundedBig+factor).toString(), (roundedBig-factor).toString(), (roundedBig + (factor/2)).toString()];
+            } 
+            else {
+                let valMix = (Math.random() * 30).toFixed(3);
+                let numMix = parseFloat(valMix);
+                let round1dec = Math.round(numMix * 10) / 10;
+                text = `Round ${numMix} to 1 decimal place.`;
+                correctAnswer = round1dec.toFixed(1);
+                options = [correctAnswer, (round1dec+0.1).toFixed(1), (round1dec-0.1).toFixed(1), (round1dec+0.2).toFixed(1)];
+                if (parseFloat(options[2]) < 0) options[2] = (round1dec+0.1).toFixed(1);
+            }
+            for (let k = options.length - 1; k > 0; k--) {
+                const j = Math.floor(Math.random() * (k + 1));
+                [options[k], options[j]] = [options[j], options[k]];
+            }
+            questions.push({
+                id: i,
+                text: text,
+                opts: [...options],
+                correct: correctAnswer
+            });
+        }
+        return questions;
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById("quizGridContainer");
+        if (!quizQuestions.length) {
+            quizQuestions = generate200Questions();
+            userSelections = new Array(200).fill(null);
+        }
+        container.innerHTML = "";
+        quizQuestions.forEach((q, idx) => {
+            const quizDiv = document.createElement("div");
+            quizDiv.className = "quiz-item";
+            quizDiv.innerHTML = `
+                <div class="quiz-question">${idx+1}. ${q.text}</div>
+                <div class="quiz-options" id="optgroup-${idx}"></div>
+                <div class="quiz-feedback" id="quizfb-${idx}"></div>
+            `;
+            container.appendChild(quizDiv);
+            const optContainer = quizDiv.querySelector(`.quiz-options`);
+            q.opts.forEach(opt => {
+                const optSpan = document.createElement("span");
+                optSpan.className = "quiz-opt";
+                optSpan.innerText = opt;
+                optSpan.setAttribute("data-val", opt);
+                optSpan.addEventListener("click", (e) => {
+                    playBeep();
+                    const parent = optSpan.parentNode;
+                    Array.from(parent.children).forEach(ch => ch.classList.remove("selected"));
+                    optSpan.classList.add("selected");
+                    userSelections[idx] = opt;
+                    const fbDiv = document.getElementById(`quizfb-${idx}`);
+                    if (fbDiv) fbDiv.innerHTML = "✔️ Selected";
+                });
+                optContainer.appendChild(optSpan);
+            });
+            if (userSelections[idx]) {
+                const selectedVal = userSelections[idx];
+                const optSpans = optContainer.querySelectorAll(".quiz-opt");
+                optSpans.forEach(span => {
+                    if (span.getAttribute("data-val") === selectedVal) {
+                        span.classList.add("selected");
+                        const fbDiv = document.getElementById(`quizfb-${idx}`);
+                        if (fbDiv) fbDiv.innerHTML = "✔️ Selected";
+                    }
+                });
+            }
+        });
+        document.getElementById("totalQ").innerText = quizQuestions.length;
+    }
+
+    function computeAllScores() {
+        let score = 0;
+        for (let i = 0; i < quizQuestions.length; i++) {
+            if (userSelections[i] && userSelections[i] === quizQuestions[i].correct) score++;
+        }
+        document.getElementById("finalScore").innerText = score;
+        const msgDiv = document.getElementById("quizMessage");
+        msgDiv.innerHTML = `🎉 Final Score: ${score} / ${quizQuestions.length} 🎉 | Alama: ${score} / ${quizQuestions.length}`;
+        playBeep();
+        setTimeout(()=>playBeep(), 200);
+        for (let i = 0; i < quizQuestions.length; i++) {
+            const fbDiv = document.getElementById(`quizfb-${i}`);
+            if (fbDiv) {
+                if (userSelections[i] && userSelections[i] === quizQuestions[i].correct) {
+                    fbDiv.innerHTML = `✅ Correct (${quizQuestions[i].correct})`;
+                    fbDiv.style.color = "#1f6d49";
+                } else if (userSelections[i]) {
+                    fbDiv.innerHTML = `❌ Wrong. Correct: ${quizQuestions[i].correct}`;
+                    fbDiv.style.color = "#b13e3e";
+                } else {
+                    fbDiv.innerHTML = `⚠️ Not answered. Correct: ${quizQuestions[i].correct}`;
+                    fbDiv.style.color = "#a0652c";
+                }
+            }
+        }
+    }
+
+    function resetAllQuiz() {
+        userSelections = new Array(quizQuestions.length).fill(null);
+        renderQuiz();
+        document.getElementById("finalScore").innerText = "0";
+        document.getElementById("quizMessage").innerHTML = "Answers reset! Try again. | Majibu yamewekwa upya.";
+        playBeep();
+    }
+
+    buildExamples();
+    quizQuestions = generate200Questions();
+    userSelections = new Array(200).fill(null);
+    renderQuiz();
+    document.getElementById("submitQuizBtn").addEventListener("click", computeAllScores);
+    document.getElementById("resetQuizBtn").addEventListener("click", resetAllQuiz);
+</script>
+</body>
+</html>
